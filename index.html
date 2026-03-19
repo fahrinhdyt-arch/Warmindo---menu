@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Warmindo — Pesan di Sini!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== RESET & VARIABLES ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red:        #D42B2B;
+      --red-dark:   #A81C1C;
+      --red-light:  #FF5252;
+      --red-bg:     #FFF5F5;
+      --white:      #FFFFFF;
+      --cream:      #FFFDF9;
+      --gray-light: #F3F3F3;
+      --gray:       #888;
+      --dark:       #1A1A1A;
+      --gold:       #F5A623;
+      --shadow:     0 4px 20px rgba(212,43,43,.14);
+      --radius:     16px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ===== HERO HEADER ===== */
+    header {
+      background: var(--red);
+      color: var(--white);
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 18px,
+        rgba(255,255,255,.045) 18px,
+        rgba(255,255,255,.045) 36px
+      );
+      pointer-events: none;
+    }
+    .header-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 20px 28px;
+      gap: 6px;
+    }
+    .logo-badge {
+      background: var(--white);
+      color: var(--red);
+      font-family: 'Fredoka One', cursive;
+      font-size: 13px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 100px;
+      margin-bottom: 4px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.15);
+    }
+    header h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2.4rem, 8vw, 3.2rem);
+      line-height: 1;
+      text-shadow: 3px 4px 0 var(--red-dark);
+      letter-spacing: 1px;
+    }
+    header p {
+      font-size: 14px;
+      opacity: .88;
+      font-weight: 600;
+    }
+    .header-wave {
+      display: block;
+      width: 100%;
+      height: 36px;
+      background: var(--cream);
+      clip-path: ellipse(55% 100% at 50% 100%);
+    }
+
+    /* ===== MAIN LAYOUT ===== */
+    main {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 0 16px 120px;
+    }
+
+    /* ===== SECTION TITLE ===== */
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.25rem;
+      color: var(--red);
+      margin: 28px 0 14px;
+    }
+    .section-title span.line {
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(90deg, var(--red) 0%, transparent 100%);
+      border-radius: 2px;
+      opacity: .25;
+    }
+
+    /* ===== CUSTOMER CARD ===== */
+    .customer-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: -4px;
+    }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .input-group label {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .5px;
+      color: var(--red);
+      text-transform: uppercase;
+    }
+    .input-group input {
+      border: 2px solid #EEE;
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-size: 15px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      outline: none;
+      transition: border-color .2s;
+      background: var(--cream);
+    }
+    .input-group input:focus { border-color: var(--red-light); }
+    .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* ===== MENU CARD ===== */
+    .menu-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .menu-item {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 13px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.06);
+      transition: transform .15s, box-shadow .15s;
+    }
+    .menu-item:active { transform: scale(.98); }
+    .menu-item.active {
+      border: 2px solid var(--red-light);
+      background: var(--red-bg);
+    }
+    .menu-item.active .item-name { color: var(--red-dark); }
+    .item-info { flex: 1; min-width: 0; }
+    .item-name {
+      font-weight: 800;
+      font-size: 14.5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .item-price {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gray);
+      margin-top: 1px;
+    }
+    .item-price span { color: var(--red); font-weight: 800; }
+
+    /* ===== QTY STEPPER ===== */
+    .qty-stepper {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      background: var(--gray-light);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+    .qty-btn {
+      border: none;
+      background: transparent;
+      width: 34px;
+      height: 34px;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--red);
+      cursor: pointer;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .15s;
+    }
+    .qty-btn:active { background: #E0E0E0; }
+    .qty-btn.plus { background: var(--red); color: var(--white); }
+    .qty-btn.plus:active { background: var(--red-dark); }
+    .qty-display {
+      min-width: 30px;
+      text-align: center;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    /* ===== CART SUMMARY ===== */
+    .cart-summary {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+    .cart-empty {
+      text-align: center;
+      color: var(--gray);
+      font-size: 14px;
+      padding: 10px 0;
+    }
+    .cart-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 5px 0;
+      border-bottom: 1px dashed #EEE;
+    }
+    .cart-line:last-of-type { border-bottom: none; }
+    .cart-line .line-name { color: var(--dark); flex: 1; }
+    .cart-line .line-price { color: var(--red); white-space: nowrap; }
+    .cart-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 2.5px solid var(--red);
+    }
+    .cart-total-label { font-family: 'Fredoka One', cursive; font-size: 1rem; }
+    .cart-total-value { font-family: 'Fredoka One', cursive; font-size: 1.5rem; color: var(--red); }
+
+    /* ===== ORDER BUTTON ===== */
+    .btn-order {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      background: #25D366;
+      color: var(--white);
+      border: none;
+      border-radius: 14px;
+      padding: 16px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem;
+      letter-spacing: .5px;
+      cursor: pointer;
+      margin-top: 16px;
+      box-shadow: 0 4px 18px rgba(37,211,102,.35);
+      transition: transform .15s, box-shadow .15s, background .15s;
+    }
+    .btn-order:hover { background: #1fba58; box-shadow: 0 6px 22px rgba(37,211,102,.45); }
+    .btn-order:active { transform: scale(.97); }
+    .btn-order svg { flex-shrink: 0; }
+
+    /* ===== TOAST ===== */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--dark);
+      color: var(--white);
+      padding: 12px 22px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 700;
+      white-space: nowrap;
+      z-index: 999;
+      transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+      pointer-events: none;
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ===== FOOTER ===== */
+    footer {
+      text-align: center;
+      color: var(--gray);
+      font-size: 12px;
+      padding: 16px;
+    }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes popIn {
+      0%   { transform: scale(.8); opacity: 0; }
+      70%  { transform: scale(1.06); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .pop { animation: popIn .2s ease forwards; }
+
+    /* ===== CATEGORY TABS ===== */
+    .tab-bar {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+      margin-top: 18px;
+    }
+    .tab-bar::-webkit-scrollbar { display: none; }
+    .tab {
+      flex-shrink: 0;
+      padding: 7px 18px;
+      border-radius: 100px;
+      font-weight: 800;
+      font-size: 13px;
+      cursor: pointer;
+      border: 2px solid #EEE;
+      background: var(--white);
+      color: var(--gray);
+      transition: all .15s;
+    }
+    .tab.active {
+      background: var(--red);
+      color: var(--white);
+      border-color: var(--red);
+    }
+    .menu-section { display: none; }
+    .menu-section.visible { display: flex; flex-direction: column; gap: 10px; }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo-badge">🍜 Order Online</div>
+    <h1>Warmindo</h1>
+    <p>Pilih menu, isi nama & meja, langsung pesan!</p>
+  </div>
+  <span class="header-wave"></span>
+</header>
+
+<main>
+
+  <!-- CUSTOMER INFO -->
+  <div class="section-title">👤 Info Pemesan <span class="line"></span></div>
+  <div class="customer-card">
+    <div class="input-row">
+      <div class="input-group">
+        <label>Nama Kamu</label>
+        <input type="text" id="custName" placeholder="Contoh: Budi" maxlength="30" />
+      </div>
+      <div class="input-group">
+        <label>No. Meja</label>
+        <input type="text" id="custTable" placeholder="Contoh: 3" maxlength="10" />
+      </div>
+    </div>
+  </div>
+
+  <!-- CATEGORY TABS -->
+  <div class="tab-bar" id="tabBar">
+    <div class="tab active" data-tab="makanan">🍜 Makanan</div>
+    <div class="tab" data-tab="minuman">🥤 Minuman</div>
+  </div>
+
+  <!-- MENU: MAKANAN -->
+  <div class="menu-section visible" id="sec-makanan">
+    <div class="menu-grid" id="grid-makanan"></div>
+  </div>
+
+  <!-- MENU: MINUMAN -->
+  <div class="menu-section" id="sec-minuman">
+    <div class="menu-grid" id="grid-minuman"></div>
+  </div>
+
+  <!-- CART -->
+  <div class="section-title">🛒 Ringkasan Pesanan <span class="line"></span></div>
+  <div class="cart-summary">
+    <div id="cartBody"><p class="cart-empty">Belum ada pesanan 😄</p></div>
+    <div class="cart-total-row">
+      <span class="cart-total-label">Total</span>
+      <span class="cart-total-value" id="cartTotal">Rp 0</span>
+    </div>
+    <button class="btn-order" id="btnOrder">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.129.558 4.122 1.532 5.856L0 24l6.335-1.521A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.817 9.817 0 01-5.001-1.366l-.357-.212-3.762.903.938-3.655-.233-.374A9.797 9.797 0 012.182 12C2.182 6.58 6.58 2.182 12 2.182c5.42 0 9.818 4.398 9.818 9.818 0 5.42-4.398 9.818-9.818 9.818z"/></svg>
+      Pesan via WhatsApp
+    </button>
+  </div>
+
+</main>
+
+<div id="toast">✅ Item ditambahkan!</div>
+
+<footer>© 2025 Warmindo — Made with ❤️</footer>
+
+<script>
+  // =============================================
+  //  DATA MENU
+  // =============================================
+  const MENU = {
+    makanan: [
+      { id: 'm1',  name: 'Indomie Biasalah',   price: 5000 },
+      { id: 'm2',  name: 'Indomie Doble',       price: 8000 },
+      { id: 'm3',  name: 'Indomie + Telur',     price: 7000 },
+      { id: 'm4',  name: 'Sundukan Sosis',      price: 2000 },
+      { id: 'm5',  name: 'Telur',               price: 3000 },
+      { id: 'm6',  name: 'Ati',                 price: 3000 },
+      { id: 'm7',  name: 'Usus',                price: 3000 },
+      { id: 'm8',  name: 'Kepala',              price: 3000 },
+      { id: 'm9',  name: 'Sayap',               price: 4000 },
+      { id: 'm10', name: 'Bekicot',             price: 3000 },
+      { id: 'm11', name: 'Telur Asin',          price: 3000 },
+      { id: 'm12', name: 'Bakso',               price: 3000 },
+    ],
+    minuman: [
+      { id: 'd1',  name: 'Kopi Hitam',          price: 3000 },
+      { id: 'd2',  name: 'Kopi Susu',           price: 4000 },
+      { id: 'd3',  name: 'Teh',                 price: 3000 },
+      { id: 'd4',  name: 'Jahe',                price: 3000 },
+      { id: 'd5',  name: 'Susu',                price: 3000 },
+      { id: 'd6',  name: 'Nutrisari',           price: 3000 },
+      { id: 'd7',  name: 'Jeruk Peras',         price: 3000 },
+      { id: 'd8',  name: 'Milo',                price: 4000 },
+      { id: 'd9',  name: 'Torabika Moca',       price: 4000 },
+      { id: 'd10', name: 'Good Day',            price: 4000 },
+      { id: 'd11', name: 'Bengbeng',            price: 4000 },
+      { id: 'd12', name: 'Chocolatos',          price: 4000 },
+    ]
+  };
+
+  // =============================================
+  //  STATE
+  // =============================================
+  const cart = {};   // { id: qty }
+  const allItems = [...MENU.makanan, ...MENU.minuman];
+  const itemMap = {};
+  allItems.forEach(i => itemMap[i.id] = i);
+
+  // =============================================
+  //  FORMAT RUPIAH
+  // =============================================
+  function formatRp(n) {
+    return 'Rp ' + n.toLocaleString('id-ID');
+  }
+  function formatRpShort(n) {
+    return (n / 1000) + 'rb';
+  }
+
+  // =============================================
+  //  RENDER MENU ITEMS
+  // =============================================
+  function renderMenu(category) {
+    const grid = document.getElementById('grid-' + category);
+    grid.innerHTML = '';
+    MENU[category].forEach(item => {
+      const qty = cart[item.id] || 0;
+      const div = document.createElement('div');
+      div.className = 'menu-item' + (qty > 0 ? ' active' : '');
+      div.id = 'item-' + item.id;
+      div.innerHTML = `
+        <div class="item-info">
+          <div class="item-name">${item.name}</div>
+          <div class="item-price"><span>${formatRpShort(item.price)}</span></div>
+        </div>
+        <div class="qty-stepper">
+          <button class="qty-btn minus" onclick="changeQty('${item.id}', -1)">−</button>
+          <span class="qty-display" id="qty-${item.id}">${qty}</span>
+          <button class="qty-btn plus" onclick="changeQty('${item.id}', 1)">+</button>
+        </div>`;
+      grid.appendChild(div);
+    });
+  }
+
+  // =============================================
+  //  CHANGE QTY
+  // =============================================
+  function changeQty(id, delta) {
+    const cur = cart[id] || 0;
+    const next = Math.max(0, cur + delta);
+    if (next === 0) delete cart[id];
+    else cart[id] = next;
+
+    // Update qty display
+    const qtyEl = document.getElementById('qty-' + id);
+    if (qtyEl) {
+      qtyEl.textContent = next;
+      qtyEl.classList.add('pop');
+      setTimeout(() => qtyEl.classList.remove('pop'), 250);
+    }
+    // Update item card style
+    const card = document.getElementById('item-' + id);
+    if (card) {
+      card.classList.toggle('active', next > 0);
+    }
+
+    if (delta > 0) showToast('✅ ' + itemMap[id].name + ' ditambahkan!');
+    renderCart();
+  }
+
+  // =============================================
+  //  RENDER CART
+  // =============================================
+  function renderCart() {
+    const body = document.getElementById('cartBody');
+    const totalEl = document.getElementById('cartTotal');
+    const keys = Object.keys(cart);
+
+    if (keys.length === 0) {
+      body.innerHTML = '<p class="cart-empty">Belum ada pesanan 😄</p>';
+      totalEl.textContent = 'Rp 0';
+      return;
+    }
+
+    let html = '';
+    let total = 0;
+    keys.forEach(id => {
+      const item = itemMap[id];
+      const qty = cart[id];
+      const sub = item.price * qty;
+      total += sub;
+      html += `<div class="cart-line">
+        <span class="line-name">${item.name} × ${qty}</span>
+        <span class="line-price">${formatRp(sub)}</span>
+      </div>`;
+    });
+
+    body.innerHTML = html;
+    totalEl.textContent = formatRp(total);
+  }
+
+  // =============================================
+  //  TOAST
+  // =============================================
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
+  }
+
+  // =============================================
+  //  TABS
+  // =============================================
+  document.getElementById('tabBar').addEventListener('click', e => {
+    const tab = e.target.closest('.tab');
+    if (!tab) return;
+    const key = tab.dataset.tab;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('.menu-section').forEach(s => s.classList.remove('visible'));
+    document.getElementById('sec-' + key).classList.add('visible');
+  });
+
+  // =============================================
+  //  ORDER VIA WHATSAPP
+  // =============================================
+  document.getElementById('btnOrder').addEventListener('click', () => {
+    const name  = document.getElementById('custName').value.trim();
+    const table = document.getElementById('custTable').value.trim();
+    const keys  = Object.keys(cart);
+
+    if (!name) { showToast('⚠️ Isi nama kamu dulu ya!'); return; }
+    if (!table) { showToast('⚠️ Isi nomor meja dulu ya!'); return; }
+    if (keys.length === 0) { showToast('⚠️ Pilih menu dulu ya!'); return; }
+
+    let lines = '';
+    let total = 0;
+    keys.forEach(id => {
+      const item = itemMap[id];
+      const qty  = cart[id];
+      const sub  = item.price * qty;
+      total += sub;
+      lines += `  - ${item.name} x${qty} = ${formatRp(sub)}\n`;
+    });
+
+    const msg =
+      `🍜 *PESANAN WARMINDO*\n` +
+      `━━━━━━━━━━━━━━━━\n` +
+      `👤 Nama  : ${name}\n` +
+      `🪑 Meja  : ${table}\n` +
+      `━━━━━━━━━━━━━━━━\n` +
+      `📋 *Pesanan:*\n${lines}` +
+      `━━━━━━━━━━━━━━━━\n` +
+      `💰 *Total : ${formatRp(total)}*\n` +
+      `━━━━━━━━━━━━━━━━\n` +
+      `Mohon segera diproses, terima kasih! 🙏`;
+
+    const phone = '6281310760237';
+    const url   = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank');
+  });
+
+  // =============================================
+  //  INIT
+  // =============================================
+  renderMenu('makanan');
+  renderMenu('minuman');
+  renderCart();
+</script>
+</body>
+</html>
